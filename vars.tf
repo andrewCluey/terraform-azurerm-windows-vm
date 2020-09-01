@@ -10,7 +10,7 @@ variable "image_rg" {
   default     = null
 }
 
-variable "vm_rg" {
+variable "rg_name" {
   description = "The name of the Resource Group where the new VM should be created."
   type        = string
 }
