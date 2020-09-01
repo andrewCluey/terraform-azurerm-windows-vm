@@ -40,7 +40,7 @@ resource "azurerm_network_interface" "vm_nic" {
 
   ip_configuration {
     name                          = "${var.vm_name}-ip"
-    subnet_id                     = data.azurerm_subnet.vm_subnet_name.id
+    subnet_id                     = data.azurerm_subnet.vm_subnet.id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -95,7 +95,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
   tags                     = var.tags
 
   network_interface_ids = [
-    data.azurerm_network_interface.vm_nic.id
+    azurerm_network_interface.vm_nic.id
   ]
 
   source_image_reference {
