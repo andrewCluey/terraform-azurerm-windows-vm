@@ -25,7 +25,7 @@ variable "vnet_rg_name" {
   type        = string
 }
 
-variable "vm_subnet" {
+variable "vm_subnet_name" {
   description = "The name of the Subnet where the main VM NIC will be added."
   type        = string
 }
@@ -72,7 +72,6 @@ variable "storage_os_disk_config" {
     storage_account_type = "Standard_LRS"
   }
 }
-
 
 variable "vm_image" {
   description = "Virtual Machine source image information. See https://www.terraform.io/docs/providers/azurerm/r/windows_virtual_machine.html#source_image_reference"
