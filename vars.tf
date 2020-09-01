@@ -4,6 +4,11 @@ variable "win_image_name" {
   default     = null
 }
 
+variable "location" {
+  description = "The azure region where the new resource will be created"
+  type        = string
+}
+
 variable "image_rg" {
   description = "The name of the Resource Group where the VM Image resides."
   type        = string
