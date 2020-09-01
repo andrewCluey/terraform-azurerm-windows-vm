@@ -35,6 +35,11 @@ variable "vm_subnet_name" {
   type        = string
 }
 
+variable "subnet_id" {
+  type        = string
+  description = "The ID of the subnet where the VMs main NIC will reside"
+}
+
 variable "vm_name" {
   description = "The name to assign to the new VM"
   type        = string
