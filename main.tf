@@ -3,56 +3,26 @@ provider "azurerm" {
   features {}
 }
 
-# DATA LOOKUPS
-
-# Get VM image Details
-#data "azurerm_image" "win_image" {
-#  name                = var.win_image_name
-#  resource_group_name = var.image_rg
-#}
-
-# Get Resource Group
-#data "azurerm_resource_group" "vm_rg" {
-#  name = var.vm_rg
-#}
-
-# Get Azure vNET Details
-#data "azurerm_virtual_network" "vm_vnet" {
-#  name                = var.vm_vnet_name
-#  resource_group_name = var.vnet_rg_name
-#}
-
-# Get Azure Subnet details
-#data "azurerm_subnet" "vm_subnet" {
-#  name                 = var.vm_subnet_name
-#  virtual_network_name = data.azurerm_virtual_network.vm_vnet.name
-#  resource_group_name  = var.vnet_rg_name
-#}
-
-# CREATE RESOURCES
-
 # Create VM Network Interfaces
 resource "azurerm_network_interface" "vm_nic" {
   name                = "${var.vm_name}-nic"
-  location            = var.location #data.azurerm_resource_group.vm_rg.location
-  resource_group_name = var.rg_name  # data.azurerm_resource_group.vm_rg.name
+  location            = var.location
+  resource_group_name = var.rg_name
   tags                = var.tags
 
   ip_configuration {
     name                          = "${var.vm_name}-ip"
-    subnet_id                     = var.subnet_id # data.azurerm_subnet.vm_subnet.id
+    subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
   }
 }
 
-
-# Create VM
+# If 'is_custom_image' = true. Create Custom VM
 resource "azurerm_windows_virtual_machine" "win_vm" {
-  # count if true conditional
   count               = var.is_custom_image ? 1 : 0
   name                = var.vm_name
-  location            = var.location # data.azurerm_resource_group.vm_rg.location
-  resource_group_name = var.rg_name  # data.azurerm_resource_group.vm_rg.name
+  location            = var.location
+  resource_group_name = var.rg_name
   size                = var.vm_size
   admin_username      = var.admin_username
   admin_password      = var.admin_password
@@ -77,16 +47,14 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   identity {
     type = "SystemAssigned"
   }
-
 }
 
-
-# If not Custom image, Deploy Image from marketplace. DEFAULT Windows Server 2019 Datacenter
+# If 'is_custom_image' = false. Create VM from standard image. DEFAULT Windows Server 2019 Datacenter.
 resource "azurerm_windows_virtual_machine" "vm" {
   count                    = var.is_custom_image ? 0 : 1
   name                     = var.vm_name
-  location                 = var.location # data.azurerm_resource_group.vm_rg.location
-  resource_group_name      = var.rg_name  # data.azurerm_resource_group.vm_rg.name
+  location                 = var.location
+  resource_group_name      = var.rg_name
   size                     = var.vm_size
   admin_username           = var.admin_username
   admin_password           = var.admin_password
