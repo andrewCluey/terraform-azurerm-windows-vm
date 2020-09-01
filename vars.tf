@@ -1,6 +1,7 @@
 variable "win_image_name" {
   description = "The name of the Azure VM Image to deploy from."
   type        = string
+  default     = null
 }
 
 variable "image_rg" {

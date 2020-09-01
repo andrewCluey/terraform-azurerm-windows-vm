@@ -29,8 +29,8 @@ data "azurerm_subnet" "vm_subnet" {
 # Create VM Network Interfaces
 resource "azurerm_network_interface" "vm_nic" {
   name                = "${var.vm_name}-nic"
-  location            = azurerm_resource_group.vm_rg.location
-  resource_group_name = azurerm_resource_group.vm_rg.name
+  location            = data.azurerm_resource_group.vm_rg.location
+  resource_group_name = data.azurerm_resource_group.vm_rg.name
   tags                = var.tags
 
   ip_configuration {
@@ -46,8 +46,8 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   # count if true conditional
   count               = var.win_image_name ? 1 : 0
   name                = var.vm_name
-  location            = azurerm_resource_group.vm_rg.location
-  resource_group_name = azurerm_resource_group.vm_rg.name
+  location            = data.azurerm_resource_group.vm_rg.location
+  resource_group_name = data.azurerm_resource_group.vm_rg.name
   size                = var.vm_size
   admin_username      = var.admin_username
   admin_password      = var.admin_password
@@ -55,7 +55,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   tags                = var.tags
 
   network_interface_ids = [
-    data.azurerm_network_interface.vm_nic.id
+    azurerm_network_interface.vm_nic.id
   ]
 
   boot_diagnostics {
@@ -80,8 +80,8 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
 resource "azurerm_windows_virtual_machine" "vm" {
   count                    = var.win_image_name ? 0 : 1
   name                     = var.vm_name
-  location                 = azurerm_resource_group.vm_rg.location
-  resource_group_name      = azurerm_resource_group.vm_rg.name
+  location                 = data.azurerm_resource_group.vm_rg.location
+  resource_group_name      = data.azurerm_resource_group.vm_rg.name
   size                     = var.vm_size
   admin_username           = var.admin_username
   admin_password           = var.admin_password
