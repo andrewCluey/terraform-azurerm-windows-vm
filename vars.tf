@@ -20,21 +20,6 @@ variable "rg_name" {
   type        = string
 }
 
-variable "vm_vnet_name" {
-  description = "The name of the vNET where the main Network interface of the new VM will be placed."
-  type        = string
-}
-
-variable "vnet_rg_name" {
-  description = "The name of the Resource Group where the vNEt resides."
-  type        = string
-}
-
-variable "vm_subnet_name" {
-  description = "The name of the Subnet where the main VM NIC will be added."
-  type        = string
-}
-
 variable "subnet_id" {
   type        = string
   description = "The ID of the subnet where the VMs main NIC will reside"
