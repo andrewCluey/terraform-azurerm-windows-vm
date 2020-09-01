@@ -83,7 +83,7 @@ variable "storage_os_disk_config" {
   description = "Map to configure OS storage disk. (Caching, size, storage account type...)"
   type        = map(string)
   default = {
-    disk_size_gb         = "30"
+    disk_size_gb         = "127" # minimum disk size of 127GB
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
