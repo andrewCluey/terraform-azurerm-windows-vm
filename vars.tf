@@ -4,15 +4,15 @@ variable "win_image_name" {
   default     = null
 }
 
-variable "location" {
-  description = "The azure region where the new resource will be created"
-  type        = string
-}
-
 variable "image_rg" {
   description = "The name of the Resource Group where the VM Image resides."
   type        = string
   default     = null
+}
+
+variable "location" {
+  description = "The azure region where the new resource will be created"
+  type        = string
 }
 
 variable "rg_name" {
@@ -44,6 +44,12 @@ variable "is_custom_image" {
   description = "Is the VM deployed from a custom image? True/False"
   type        = bool
   default     = false
+}
+
+variable "image_id" {
+  description = "If deploying a custom VM Image, enter in the the ID of the VM image in this param."
+  type        = string
+  default     = null
 }
 
 variable "vm_name" {

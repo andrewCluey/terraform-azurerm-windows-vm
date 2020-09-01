@@ -6,10 +6,10 @@ provider "azurerm" {
 # DATA LOOKUPS
 
 # Get VM image Details
-data "azurerm_image" "win_image" {
-  name                = var.win_image_name
-  resource_group_name = var.image_rg
-}
+#data "azurerm_image" "win_image" {
+#  name                = var.win_image_name
+#  resource_group_name = var.image_rg
+#}
 
 # Get Resource Group
 #data "azurerm_resource_group" "vm_rg" {
@@ -56,7 +56,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   size                = var.vm_size
   admin_username      = var.admin_username
   admin_password      = var.admin_password
-  source_image_id     = data.azurerm_image.win_image.id
+  source_image_id     = var.image_id
   tags                = var.tags
 
   network_interface_ids = [
