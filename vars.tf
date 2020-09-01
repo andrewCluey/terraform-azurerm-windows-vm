@@ -34,13 +34,18 @@ variable "vm_name" {
   type        = string
 }
 
-variable "tags" {
-  description = "(optional) describe your variable"
-  type        = map(string)
-  default     = null
+variable "vm_size" {
+  description = "The size of the new Vm to deploy. Options can be found HERE."
+  default     = "standard_b2s"
+  type        = string
 }
 
-variable "password" {
+variable "diagnostics_storage_account_name" {
+  description = "The Storage account to use for VM diagnostics"
+  type        = string
+}
+
+variable "admin_password" {
   description = "The password to assign to the new Admin user account."
   type        = string
 }
@@ -51,9 +56,31 @@ variable "admin_username" {
   type        = string
 }
 
-variable "vm_size" {
-  description = "The size of the new Vm to deploy. Options can be found HERE."
-  default     = "b2ms"
-  type        = string
+variable "tags" {
+  description = "(optional) describe your variable"
+  type        = map(string)
+  default     = null
 }
 
+variable "storage_os_disk_config" {
+  description = "Map to configure OS storage disk. (Caching, size, storage account type...)"
+  type        = map(string)
+  default = {
+    disk_size_gb         = "30"
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+}
+
+
+variable "vm_image" {
+  description = "Virtual Machine source image information. See https://www.terraform.io/docs/providers/azurerm/r/windows_virtual_machine.html#source_image_reference"
+  type        = map(string)
+
+  default = {
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2019-Datacenter"
+    version   = "latest"
+  }
+}
