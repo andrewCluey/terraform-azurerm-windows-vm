@@ -1,3 +1,8 @@
+provider "azurerm" {
+  version = "=2.25.0"
+  features {}
+}
+
 # DATA LOOKUPS
 
 # Get VM image Details
@@ -20,7 +25,7 @@ data "azurerm_virtual_network" "vm_vnet" {
 # Get Azure Subnet details
 data "azurerm_subnet" "vm_subnet" {
   name                 = var.vm_subnet_name
-  virtual_network_name = data.azurerm_virtual_network.vm_net.name
+  virtual_network_name = data.azurerm_virtual_network.vm_vnet.name
   resource_group_name  = var.vnet_rg_name
 }
 
