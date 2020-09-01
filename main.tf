@@ -49,7 +49,7 @@ resource "azurerm_network_interface" "vm_nic" {
 # Create VM
 resource "azurerm_windows_virtual_machine" "win_vm" {
   # count if true conditional
-  count               = var.win_image_name ? 1 : 0
+  count               = var.is_custom_image ? 1 : 0
   name                = var.vm_name
   location            = var.location # data.azurerm_resource_group.vm_rg.location
   resource_group_name = var.rg_name  # data.azurerm_resource_group.vm_rg.name
@@ -83,7 +83,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
 
 # If not Custom image, Deploy Image from marketplace. DEFAULT Windows Server 2019 Datacenter
 resource "azurerm_windows_virtual_machine" "vm" {
-  count                    = var.win_image_name ? 0 : 1
+  count                    = var.is_custom_image ? 0 : 1
   name                     = var.vm_name
   location                 = var.location # data.azurerm_resource_group.vm_rg.location
   resource_group_name      = var.rg_name  # data.azurerm_resource_group.vm_rg.name

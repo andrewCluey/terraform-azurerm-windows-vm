@@ -40,6 +40,12 @@ variable "subnet_id" {
   description = "The ID of the subnet where the VMs main NIC will reside"
 }
 
+variable "is_custom_image" {
+  description = "Is the VM deployed from a custom image? True/False"
+  type        = bool
+  default     = false
+}
+
 variable "vm_name" {
   description = "The name to assign to the new VM"
   type        = string
