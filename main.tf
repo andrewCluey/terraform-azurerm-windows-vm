@@ -13,11 +13,6 @@ resource "azurerm_network_interface" "vm_nic" {
   }
 }
 
-output "priv_ip_address" {
-  description = "The IP Address assigned to the main VM NIC"
-  value       = azurerm_network_interface.vm_nic.private_ip_address
-}
-
 # If 'is_custom_image' = true. Create Custom VM
 resource "azurerm_windows_virtual_machine" "win_vm" {
   count               = var.is_custom_image ? 1 : 0
