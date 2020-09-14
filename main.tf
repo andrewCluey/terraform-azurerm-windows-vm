@@ -1,10 +1,6 @@
-provider "azurerm" {
-  version = "=2.25.0"
-  features {}
-}
-
 # Create VM Network Interfaces
 resource "azurerm_network_interface" "vm_nic" {
+  provider            = var.provider.alias
   name                = "${var.vm_name}-nic"
   location            = var.location
   resource_group_name = var.rg_name
@@ -17,9 +13,15 @@ resource "azurerm_network_interface" "vm_nic" {
   }
 }
 
+output "priv_ip_address" {
+  description = "The IP Address assigned to the main VM NIC"
+  value       = azurerm_network_interface.vm_nic.private_ip_address
+}
+
 # If 'is_custom_image' = true. Create Custom VM
 resource "azurerm_windows_virtual_machine" "win_vm" {
   count               = var.is_custom_image ? 1 : 0
+  provider            = var.provider.alias
   name                = var.vm_name
   location            = var.location
   resource_group_name = var.rg_name
