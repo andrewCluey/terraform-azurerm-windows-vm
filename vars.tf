@@ -91,3 +91,4 @@ variable "vm_image" {
     version   = "latest"
   }
 }
+
