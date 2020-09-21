@@ -13,3 +13,7 @@ output "vm_nsg_id" {
   value       = azurerm_network_security_group.vm_nsg.id
 }
 
+output "vm_nsg_name" {
+  description = "The name of the Network Secyurity group that has been assigned to the VM"
+  value       = azurerm_network_security_group.vm_nsg.name
+}

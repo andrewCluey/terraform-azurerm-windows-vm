@@ -96,16 +96,7 @@ resource "azurerm_network_security_group" "vm_nsg" {
   resource_group_name = var.rg_name
 }
 
-# If custom image = TRUE
 resource "azurerm_network_interface_security_group_association" "custom_nsg_association" {
-  count                     = var.is_custom_image ? 1 : 0
-  network_interface_id      = azurerm_network_interface.vm_nic.id
-  network_security_group_id = azurerm_network_security_group.vm_nsg.id
-}
-
-# If custom image = FALSE
-resource "azurerm_network_interface_security_group_association" "custom_nsg_association" {
-  count                     = var.is_custom_image ? 0 : 1
   network_interface_id      = azurerm_network_interface.vm_nic.id
   network_security_group_id = azurerm_network_security_group.vm_nsg.id
 }
