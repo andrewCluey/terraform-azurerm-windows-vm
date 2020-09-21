@@ -12,6 +12,7 @@ resource "azurerm_network_interface" "vm_nic" {
   }
 }
 
+
 # If 'is_custom_image' = true. Create Custom VM
 resource "azurerm_windows_virtual_machine" "win_vm" {
   count               = var.is_custom_image ? 1 : 0
@@ -43,6 +44,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
     type = "SystemAssigned"
   }
 }
+
 
 # If 'is_custom_image' = false. Create VM from standard image. DEFAULT Windows Server 2019 Datacenter.
 resource "azurerm_windows_virtual_machine" "vm" {
@@ -84,3 +86,26 @@ resource "azurerm_windows_virtual_machine" "vm" {
   }
 }
 
+
+##### Network Security Groups #####
+
+# Set Network Security Group on the VM Interface.
+resource "azurerm_network_security_group" "vm_nsg" {
+  name                = "${var.vm_name}-nsg"
+  location            = var.location
+  resource_group_name = var.rg_name
+}
+
+# If custom image = TRUE
+resource "azurerm_network_interface_security_group_association" "custom_nsg_association" {
+  count                     = var.is_custom_image ? 1 : 0
+  network_interface_id      = azurerm_network_interface.vm_nic.id
+  network_security_group_id = azurerm_network_security_group.vm_nsg.id
+}
+
+# If custom image = FALSE
+resource "azurerm_network_interface_security_group_association" "custom_nsg_association" {
+  count                     = var.is_custom_image ? 0 : 1
+  network_interface_id      = azurerm_network_interface.vm_nic.id
+  network_security_group_id = azurerm_network_security_group.vm_nsg.id
+}
