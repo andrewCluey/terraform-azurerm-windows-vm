@@ -131,6 +131,12 @@ module "windows-vm" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
+  
+  plan = {
+    name      = "cis-ws2019-l2"
+    product   = "cis-windows-server-2019-v1-0-0-l2"
+    publisher = "center-for-internet-security-inc"
+  }
 
   tags = { 
       Terraform = true,

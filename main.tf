@@ -43,6 +43,12 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   identity {
     type = "SystemAssigned"
   }
+
+  plan {
+    name      = lookup(var.plan, "name", null)
+    product   = lookup(var.plan, "product", null)
+    publisher = lookup(var.plan, "publisher", null)
+  }
 }
 
 
