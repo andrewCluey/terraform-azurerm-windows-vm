@@ -93,16 +93,3 @@ resource "azurerm_windows_virtual_machine" "vm" {
 }
 
 
-##### Network Security Groups #####
-
-# Set Network Security Group on the VM Interface.
-#resource "azurerm_network_security_group" "vm_nsg" {
-#  name                = "${var.vm_name}-nsg"
-#  location            = var.location
-#  resource_group_name = var.rg_name
-#}
-
-#resource "azurerm_network_interface_security_group_association" "custom_nsg_association" {
-#  network_interface_id      = azurerm_network_interface.vm_nic.id
-#  network_security_group_id = azurerm_network_security_group.vm_nsg.id
-#}
