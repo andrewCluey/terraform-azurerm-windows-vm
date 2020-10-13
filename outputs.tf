@@ -8,7 +8,7 @@ output "nic_id" {
   value       = azurerm_network_interface.vm_nic.id
 }
 
+
 output "vm_id" {
-  description = "The ID of the newly created Virtual Machine"
-  value       = azurerm_windows_virtual_machine.vm.id
+  value = var.is_custom_image ? azurerm_windows_vm.win_vm.id : azurerm_windows_vm.vm.id
 }
