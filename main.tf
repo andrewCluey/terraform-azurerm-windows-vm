@@ -87,6 +87,12 @@ resource "azurerm_windows_virtual_machine" "vm" {
     disk_size_gb         = lookup(var.storage_os_disk_config, "disk_size_gb", null)
   }
 
+  plan {
+    name      = lookup(var.plan, "name", null)
+    product   = lookup(var.plan, "product", null)
+    publisher = lookup(var.plan, "publisher", null)
+  }
+
   identity {
     type = "SystemAssigned"
   }
