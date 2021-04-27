@@ -43,7 +43,7 @@ variable "vm_name" {
   description = "The name to assign to the VM."
   type        = string
   validation {
-    condition     = can(regex("^[a-zA-Z0-9]{1,14}$", var.name_suffix))
+    condition     = can(regex("^[a-zA-Z0-9]{1,14}$", var.vm_name))
     error_message = "The name should be without spaces and less than 14 characters."
   }
 }
