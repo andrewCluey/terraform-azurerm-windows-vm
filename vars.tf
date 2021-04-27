@@ -29,16 +29,6 @@ variable "location" {
   default     = "UK South"
 }
 
-variable "location_short" {
-  type        = string
-  description = "An abbreviation to use for the location. Must be less than 4 characters."
-  default     = "uks"
-  validation {
-    condition     = can(regex("^[a-zA-Z0-9]{1,4}$", var.location_short))
-    error_message = "The short location abbreviation should be without spaces and less than 4 characters."
-  }
-}
-
 variable "vm_name" {
   description = "The name to assign to the VM."
   type        = string
