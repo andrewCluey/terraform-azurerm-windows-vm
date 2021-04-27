@@ -8,7 +8,7 @@ variable "project_code" {
   type        = string
   description = "The Project/Cost Code assigned to the project"
   validation {
-    condition     = can(regex("^[a-zA-Z0-9]{1,5}$", var.project_code))
+    condition     = can(regex("^[a-zA-Z0-9]{1,6}$", var.project_code))
     error_message = "The project code name should be without spaces and less than 5 characters."
   }
 }
@@ -18,7 +18,7 @@ variable "environment" {
   description = "The staging environment where the new vNet will be deployed. For example 'Dev'"
   default     = "Dev"
   validation {
-    condition     = can(regex("^[a-zA-Z0-9]{1,5}$", var.environment))
+    condition     = can(regex("^[a-zA-Z0-9]{1,6}$", var.environment))
     error_message = "The environment name should be without spaces and less than 5 characters."
   }
 }
