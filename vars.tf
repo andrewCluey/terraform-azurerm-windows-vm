@@ -1,21 +1,54 @@
-variable "win_image_name" {
-  description = "The name of the Azure VM Image to deploy from."
-  type        = string
+variable "tags" {
+  description = "(optional) a map of 'key'= 'value' pairs to add as tags. In addition to the default tags"
+  type        = map(string)
   default     = null
 }
 
-variable "image_rg" {
-  description = "The name of the Resource Group where the VM Image resides."
+variable "project_code" {
   type        = string
-  default     = null
+  description = "The Project/Cost Code assigned to the project"
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9]{1,5}$", var.project_code))
+    error_message = "The environment name should be without spaces and less than 5 characters."
+  }
+}
+
+variable "environment" {
+  type        = string
+  description = "The staging environment where the new vNet will be deployed. For example 'Dev'"
+  default     = "Dev"
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9]{1,5}$", var.environment))
+    error_message = "The environment name should be without spaces and less than 5 characters."
+  }
 }
 
 variable "location" {
   description = "The azure region where the new resource will be created"
   type        = string
+  default     = "UK South"
 }
 
-variable "rg_name" {
+variable "location_short" {
+  type        = string
+  description = "An abbreviation to use for the location. Must be less than 4 characters."
+  default     = "uks"
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9]{1,4}$", var.location_short))
+    error_message = "The short location abbreviation should be without spaces and less than 4 characters."
+  }
+}
+
+variable "name_suffix" {
+  description = "The suffix to assign to the VM."
+  type        = string
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9]{1,4}$", var.name_suffix))
+    error_message = "The name prefix should be without spaces and less than 4 characters."
+  }
+}
+
+variable "resource_group_name" {
   description = "The name of the Resource Group where the new VM should be created."
   type        = string
 }
@@ -37,11 +70,6 @@ variable "image_id" {
   default     = null
 }
 
-variable "vm_name" {
-  description = "The name to assign to the new VM"
-  type        = string
-}
-
 variable "vm_size" {
   description = "The size of the new Vm to deploy. Options can be found HERE."
   default     = "standard_b2s"
@@ -56,18 +84,14 @@ variable "diagnostics_storage_account_name" {
 variable "admin_password" {
   description = "The password to assign to the new Admin user account."
   type        = string
+  sensitive   = true
 }
 
 variable "admin_username" {
   description = "The username to assign tot he new VMs admin user account"
   default     = "adminuser"
   type        = string
-}
-
-variable "tags" {
-  description = "(optional) describe your variable"
-  type        = map(string)
-  default     = null
+  sensitive   = true
 }
 
 variable "storage_os_disk_config" {
@@ -90,10 +114,4 @@ variable "vm_image" {
     sku       = "2019-Datacenter"
     version   = "latest"
   }
-}
-
-variable "plan" {
-  description = "A Plan block to be used when the source VM image was taken from a marketplace image (Required data will be tagged on to the VM Image.)"
-  type        = map(string)
-  default     = null
 }
