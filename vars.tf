@@ -39,12 +39,12 @@ variable "location_short" {
   }
 }
 
-variable "name_suffix" {
-  description = "The suffix to assign to the VM."
+variable "vm_name" {
+  description = "The name to assign to the VM."
   type        = string
   validation {
-    condition     = can(regex("^[a-zA-Z0-9]{1,4}$", var.name_suffix))
-    error_message = "The name prefix should be without spaces and less than 4 characters."
+    condition     = can(regex("^[a-zA-Z0-9]{1,14}$", var.name_suffix))
+    error_message = "The name should be without spaces and less than 14 characters."
   }
 }
 
