@@ -1,5 +1,4 @@
 locals {
-  vm_name = lower("${var.project_code}-${var.environment}-${var.name_suffix}")
   module_tag = {
     "module" = basename(abspath(path.module))
   }
@@ -15,23 +14,22 @@ locals {
 # Create VM Network Interface
 ## Future enhancement - modify this to include option to deploy mutliple NICs via 'for_each'
 resource "azurerm_network_interface" "vm_nic" {
-  name                = "${local.vm_name}-nic"
+  name                = "${var.vm_name}-nic"
   location            = var.location
   resource_group_name = var.resource_group_name
   tags                = var.tags
 
   ip_configuration {
-    name                          = "${local.vm_name}-ip"
+    name                          = "${var.vm_name}-ip"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
   }
 }
 
-
 # If 'is_custom_image' = true. Create Custom VM
 resource "azurerm_windows_virtual_machine" "win_vm" {
   count               = var.is_custom_image ? 1 : 0
-  name                = local.vm_name
+  name                = var.vm_name
   location            = var.location
   resource_group_name = var.resource_group_name
   size                = var.vm_size
@@ -49,7 +47,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   }
 
   os_disk {
-    name                 = lookup(var.storage_os_disk_config, "name", "${local.vm_name}-osdisk")
+    name                 = lookup(var.storage_os_disk_config, "name", "${var.vm_name}-osdisk")
     caching              = lookup(var.storage_os_disk_config, "caching", null)
     storage_account_type = lookup(var.storage_os_disk_config, "storage_account_type", null)
     disk_size_gb         = lookup(var.storage_os_disk_config, "disk_size_gb", null)
@@ -64,7 +62,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
 # If 'is_custom_image' = false. Create VM from standard image. DEFAULT Windows Server 2019 Datacenter.
 resource "azurerm_windows_virtual_machine" "vm" {
   count                    = var.is_custom_image ? 0 : 1
-  name                     = local.vm_name
+  name                     = var.vm_name
   location                 = var.location
   resource_group_name      = var.resource_group_name
   size                     = var.vm_size
@@ -90,7 +88,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
   }
 
   os_disk {
-    name                 = lookup(var.storage_os_disk_config, "name", "${local.vm_name}-osdisk")
+    name                 = lookup(var.storage_os_disk_config, "name", "${var.vm_name}-osdisk")
     caching              = lookup(var.storage_os_disk_config, "caching", null)
     storage_account_type = lookup(var.storage_os_disk_config, "storage_account_type", null)
     disk_size_gb         = lookup(var.storage_os_disk_config, "disk_size_gb", null)

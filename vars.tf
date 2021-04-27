@@ -9,7 +9,7 @@ variable "project_code" {
   description = "The Project/Cost Code assigned to the project"
   validation {
     condition     = can(regex("^[a-zA-Z0-9]{1,5}$", var.project_code))
-    error_message = "The environment name should be without spaces and less than 5 characters."
+    error_message = "The project code name should be without spaces and less than 5 characters."
   }
 }
 
