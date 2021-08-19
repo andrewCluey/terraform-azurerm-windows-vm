@@ -1,27 +1,9 @@
 variable "tags" {
   description = "(optional) a map of 'key'= 'value' pairs to add as tags. In addition to the default tags"
   type        = map(string)
-  default     = null
+  default     = {}
 }
 
-variable "project_code" {
-  type        = string
-  description = "The Project/Cost Code assigned to the project"
-  validation {
-    condition     = can(regex("^[a-zA-Z0-9]{1,6}$", var.project_code))
-    error_message = "The project code name should be without spaces and less than 5 characters."
-  }
-}
-
-variable "environment" {
-  type        = string
-  description = "The staging environment where the new vNet will be deployed. For example 'Dev'"
-  default     = "Dev"
-  validation {
-    condition     = can(regex("^[a-zA-Z0-9]{1,6}$", var.environment))
-    error_message = "The environment name should be without spaces and less than 5 characters."
-  }
-}
 
 variable "location" {
   description = "The azure region where the new resource will be created"

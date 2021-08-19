@@ -1,15 +1,3 @@
-locals {
-  module_tag = {
-    "module" = basename(abspath(path.module))
-  }
-  default_tags = {
-    environment   = var.environment
-    "cost centre" = var.project_code
-  }
-
-  tags = merge(var.tags, local.module_tag, local.default_tags)
-}
-
 
 # Create VM Network Interface
 ## Future enhancement - modify this to include option to deploy mutliple NICs via 'for_each'
