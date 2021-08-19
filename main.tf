@@ -47,10 +47,11 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   }
 
   os_disk {
-    name                 = lookup(var.storage_os_disk_config, "name", "${var.vm_name}-osdisk")
-    caching              = lookup(var.storage_os_disk_config, "caching", null)
-    storage_account_type = lookup(var.storage_os_disk_config, "storage_account_type", null)
-    disk_size_gb         = lookup(var.storage_os_disk_config, "disk_size_gb", null)
+    name                   = lookup(var.storage_os_disk_config, "name", "${var.vm_name}-osdisk")
+    caching                = lookup(var.storage_os_disk_config, "caching", null)
+    storage_account_type   = lookup(var.storage_os_disk_config, "storage_account_type", null)
+    disk_size_gb           = lookup(var.storage_os_disk_config, "disk_size_gb", null)
+    disk_encryption_set_id = lookup(var.storage_os_disk_config, "disk_encryption_set_id", null)
   }
 
   identity {
