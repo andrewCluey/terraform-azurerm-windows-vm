@@ -72,6 +72,12 @@ resource "azurerm_windows_virtual_machine" "vm" {
     version   = lookup(var.vm_image, "version", null)
   }
 
+  plan {
+    name      = lookup(var.vm_image_plan, "name", null)
+    product   = lookup(var.vm_image_plan, "product", null)
+    publisher = lookup(var.vm_image_plan, "publisher", null)
+  }
+  
   boot_diagnostics {
     storage_account_uri = "https://${var.diagnostics_storage_account_name}.blob.core.windows.net"
   }

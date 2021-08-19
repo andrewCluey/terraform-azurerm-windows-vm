@@ -87,3 +87,9 @@ variable "vm_image" {
     version   = "latest"
   }
 }
+
+variable "vm_image_plan" {
+  type        = map(string)
+  description = "If using an image from the Marketplace, then the PLan information should be completed."
+  default     = {}
+}
