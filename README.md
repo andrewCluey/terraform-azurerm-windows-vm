@@ -12,7 +12,7 @@ v3.0.0 of this module has been tested with v3.12.0 of the azurerm provider.
 | `vm_name` | `string` | true | The name to assign to the new Virtual machine. |
 | `subnet_id` | `string` | true | The ID of the Azure Subnet where the main NIC of the VM will be created. |
 | `vm_size` | `string` | false | The size of the VM to deploy. Defaults to Standard_B2s |
-| `diagnostics_storage_account_name` | `string` | false | The name of the storage account to use for VM Boot diagnostics. |
+| `boot_diagnostics_storage_account_name` | `string` | false | The name of the storage account to use for VM Boot diagnostics. |
 | `admin_username` | `string` | true | The username for the Admin User Account. |
 | `admin_password` | `string` | true | The password to assign to the new Admin username. Please generate a password using a secure method.|
 | `storage_os_disk_config` | `map` | false | A map object defining the `system` disk (see example below). |
@@ -77,7 +77,7 @@ module "windows-vm" {
 
 ### Deploying A Custom VM Image with a Boot Diagnostic Storage Account
 
-```hcl
+```js
 module "windows-vm" {
   source  = 
   version = "3.0.0"
@@ -89,7 +89,7 @@ module "windows-vm" {
   source_image_id                  = local.image_id
   admin_username                   = "adminuser"
   admin_password                   = "124Pa$$wYQd!H3!" # Never set passwords in this way. Use a password vault or other secrets engine to generate Passwords).
-  diagnostics_storage_account_name = azurerm_storage_account.boot_diag.name
+  boot_diagnostics_storage_account_name = azurerm_storage_account.boot_diag.name
 
   tags = {
     Terraform   = true,

@@ -30,7 +30,7 @@ variable "vm_size" {
 }
 
 variable "boot_diagnostics_storage_account_name" {
-  description = "The Storage account to use for VM diagnostics"
+  description = "The Storage account to use for VM Boot diagnostic logging."
   type        = string
   default     = null
 }
