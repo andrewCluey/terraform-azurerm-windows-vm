@@ -10,5 +10,5 @@ output "nic_id" {
 
 
 output "vm_id" {
-  value = var.is_custom_image ? azurerm_windows_virtual_machine.win_vm[0].id : azurerm_windows_virtual_machine.vm[0].id
+  value = azurerm_windows_virtual_machine.vm.id
 }

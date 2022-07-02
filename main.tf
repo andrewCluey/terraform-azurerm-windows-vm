@@ -1,5 +1,10 @@
+locals {
+  source_image_id  = var.source_image_id != null ? var.source_image_id : false # is source_image_id variable set?
+  boot_diagnostics = var.boot_diagnostics_storage_account_name != null ? var.boot_diagnostics_storage_account_name : false
+}
 
 # Create VM Network Interface
+## Future enhancement - modify to allow static IP allocation
 ## Future enhancement - modify this to include option to deploy mutliple NICs via 'for_each'
 resource "azurerm_network_interface" "vm_nic" {
   name                = "${var.vm_name}-nic"
@@ -14,83 +19,63 @@ resource "azurerm_network_interface" "vm_nic" {
   }
 }
 
-# If 'is_custom_image' = true. Create Custom VM
-resource "azurerm_windows_virtual_machine" "win_vm" {
-  count               = var.is_custom_image ? 1 : 0
-  name                = var.vm_name
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  size                = var.vm_size
-  admin_username      = var.admin_username
-  admin_password      = var.admin_password
-  source_image_id     = var.image_id
-  tags                = var.tags
-
-  network_interface_ids = [
-    azurerm_network_interface.vm_nic.id
-  ]
-
-  boot_diagnostics {
-    storage_account_uri = "https://${var.diagnostics_storage_account_name}.blob.core.windows.net"
-  }
-
-  os_disk {
-    name                   = lookup(var.storage_os_disk_config, "name", "${var.vm_name}-osdisk")
-    caching                = lookup(var.storage_os_disk_config, "caching", null)
-    storage_account_type   = lookup(var.storage_os_disk_config, "storage_account_type", null)
-    disk_size_gb           = lookup(var.storage_os_disk_config, "disk_size_gb", null)
-    disk_encryption_set_id = lookup(var.storage_os_disk_config, "disk_encryption_set_id", null)
-  }
-
-  identity {
-    type = "SystemAssigned"
-  }
-}
-
-
-# If 'is_custom_image' = false. Create VM from standard image. DEFAULT Windows Server 2019 Datacenter.
 resource "azurerm_windows_virtual_machine" "vm" {
-  count                    = var.is_custom_image ? 0 : 1
   name                     = var.vm_name
   location                 = var.location
   resource_group_name      = var.resource_group_name
   size                     = var.vm_size
   admin_username           = var.admin_username
   admin_password           = var.admin_password
-  provision_vm_agent       = true
-  enable_automatic_updates = true
+  provision_vm_agent       = var.provision_vm_agent       # default is true
+  enable_automatic_updates = var.enable_automatic_updates # default is true
+  source_image_id          = var.source_image_id          # default is null
   tags                     = var.tags
 
-  network_interface_ids = [
-    azurerm_network_interface.vm_nic.id
-  ]
-
-  source_image_reference {
-    offer     = lookup(var.vm_image, "offer", null)
-    publisher = lookup(var.vm_image, "publisher", null)
-    sku       = lookup(var.vm_image, "sku", null)
-    version   = lookup(var.vm_image, "version", null)
-  }
-
-  plan {
-    name      = lookup(var.vm_image_plan, "name", null)
-    product   = lookup(var.vm_image_plan, "product", null)
-    publisher = lookup(var.vm_image_plan, "publisher", null)
-  }
-  
-  boot_diagnostics {
-    storage_account_uri = "https://${var.diagnostics_storage_account_name}.blob.core.windows.net"
+  # If var.source_image_id = null (the default), then `source_image_reference` will be used.
+  dynamic "source_image_reference" {
+    for_each = local.source_image_id == "false" ? [1] : []
+    content {
+      offer     = lookup(var.vm_image, "offer", "WindowsServer")
+      publisher = lookup(var.vm_image, "publisher", "MicrosoftWindowsServer")
+      sku       = lookup(var.vm_image, "sku", "2019-Datacenter")
+      version   = lookup(var.vm_image, "version", "latest")
+    }
   }
 
   os_disk {
-    name                 = lookup(var.storage_os_disk_config, "name", "${var.vm_name}-osdisk")
-    caching              = lookup(var.storage_os_disk_config, "caching", null)
-    storage_account_type = lookup(var.storage_os_disk_config, "storage_account_type", null)
-    disk_size_gb         = lookup(var.storage_os_disk_config, "disk_size_gb", null)
+    name                   = lookup(var.storage_os_disk_config, "name", "${var.vm_name}-osdisk")
+    caching                = lookup(var.storage_os_disk_config, "caching", "ReadWrite")
+    storage_account_type   = lookup(var.storage_os_disk_config, "storage_account_type", "Standard_LRS")
+    disk_size_gb           = lookup(var.storage_os_disk_config, "disk_size_gb", "127")
     disk_encryption_set_id = lookup(var.storage_os_disk_config, "disk_encryption_set_id", null)
   }
 
+  # Set a boot diagnostic storage account ONLY if the `diagnostics_storage_account_name` input parameter is set.
+  dynamic "boot_diagnostics" {
+    for_each = local.boot_diagnostics == "false" ? [] : [1]
+    content {
+      storage_account_uri = "https://${var.boot_diagnostics_storage_account_name}.blob.core.windows.net"
+    }
+  }
+
+  # Define a `plan` block ONLY if var.vm_image_plan has been defined.
+  dynamic "plan" {
+    for_each = var.marketplace_image == true ? [1] : []
+
+    content {
+      name      = var.vm_image_plan.name
+      product   = var.vm_image_plan.product
+      publisher = var.vm_image_plan.publisher
+    }
+  }
+
+  ## future enhancement - allow this to be switched on/off
   identity {
     type = "SystemAssigned"
   }
+
+  ## Future Enhancement - allow for multiple NICs to be added.
+  network_interface_ids = [
+    azurerm_network_interface.vm_nic.id
+  ]
 }
